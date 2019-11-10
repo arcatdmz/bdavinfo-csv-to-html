@@ -132,7 +132,8 @@ fs.createReadStream(input, {
           .replace(/[ａ-ｚＡ-Ｚ０-９]/g, (s: string) => {
             return String.fromCharCode(s.charCodeAt(0) - 0xfee0);
           })
-          .replace(/　/g, " ");
+          .replace(/　/g, " ")
+          .replace(/\[字\]$/g, "");
       }
       ws.write(
         `<div class="title"><h1><span class="index">${i +
