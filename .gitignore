@@ -1,5 +1,6 @@
 # Application-specific files
 csv/*.csv
+html/*.html
 
 # Logs
 logs
