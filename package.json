@@ -1,0 +1,16 @@
+{
+  "name": "bdavinfo-csv-to-html",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/arcatdmz/bdavinfo-csv-to-html.git",
+  "author": "Jun Kato <i@junkato.jp>",
+  "license": "MIT",
+  "dependencies": {
+    "csv-parser": "^2.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.7",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.7.2"
+  }
+}
