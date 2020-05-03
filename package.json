@@ -5,8 +5,12 @@
   "repository": "https://github.com/arcatdmz/bdavinfo-csv-to-html.git",
   "author": "Jun Kato <i@junkato.jp>",
   "license": "MIT",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
   "dependencies": {
-    "csv-parser": "^2.3.2"
+    "csv-parser": "^2.3.2",
+    "iconv-lite": "^0.5.1"
   },
   "devDependencies": {
     "@types/node": "^12.12.7",

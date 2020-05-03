@@ -1,3 +1,4 @@
+import iconv from "iconv-lite";
 import csv from "csv-parser";
 import fs from "fs";
 
@@ -95,24 +96,25 @@ const style = `
   }
 `;
 
-fs.createReadStream(input, {
-  encoding: "utf8"
-})
+fs.createReadStream(input)
+  .pipe(iconv.decodeStream("Shift_JIS"))
   .pipe(
     csv({
-      headers: ["t", "d", "e"]
+      headers: ["t", "d", "e"],
     })
   )
-  .on("data", data =>
-    results.push(data as {
-      t: string;
-      d: string;
-      e: string;
-    })
+  .on("data", (data) =>
+    results.push(
+      data as {
+        t: string;
+        d: string;
+        e: string;
+      }
+    )
   )
   .on("end", () => {
     const ws = fs.createWriteStream(output, {
-      encoding: "utf8"
+      encoding: "utf8",
     });
     ws.write(`<html><head>`);
     ws.write(
@@ -122,8 +124,9 @@ fs.createReadStream(input, {
     ws.write(`</head>`);
     ws.write(`<body><div class="wrapper"><div class="header">`);
     ws.write(
-      `<h1>${results.length +
-        1}タイトル <span class="dim">(作成日: ${date})</span></h1>`
+      `<h1>${
+        results.length + 1
+      }タイトル <span class="dim">(作成日: ${date})</span></h1>`
     );
     ws.write(`</div><div class="content">`);
     results.forEach((r, i) => {
@@ -136,8 +139,9 @@ fs.createReadStream(input, {
           .replace(/\[字\]$/g, "");
       }
       ws.write(
-        `<div class="title"><h1><span class="index">${i +
-          1}</span><span class="content">${r.t}</span></h1><p><small>${
+        `<div class="title"><h1><span class="index">${
+          i + 1
+        }</span><span class="content">${r.t}</span></h1><p><small>${
           r.e
         }</small></p><p>${r.d}</p></div>`
       );
