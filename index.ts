@@ -1,9 +1,15 @@
 import iconv from "iconv-lite";
 import csv from "csv-parser";
 import fs from "fs";
+import path from "path";
+import ffmetadata from "ffmetadata";
 
-const input = "csv/bdav.csv",
-  output = "html/bdav.html";
+const basedir = "data",
+  input = path.join(basedir, "bdav.csv"),
+  output = path.join(basedir, "bdav.html"),
+  mp4dir = basedir,
+  createMp4Path = (dir: string, index: number) =>
+    path.join(dir, String(index + 1).padStart(5, "0") + ".mp4");
 
 const results = [];
 
@@ -112,7 +118,16 @@ fs.createReadStream(input)
       }
     )
   )
-  .on("end", () => {
+  .on("end", async () => {
+    const mp4Tasks: {
+      path: string;
+      data: {
+        title: string;
+        description: string;
+        year: string;
+      };
+    }[] = [];
+
     const ws = fs.createWriteStream(output, {
       encoding: "utf8",
     });
@@ -145,8 +160,31 @@ fs.createReadStream(input)
           r.e
         }</small></p><p>${r.d}</p></div>`
       );
+      const mp4Path = createMp4Path(mp4dir, i);
+      if (fs.existsSync(mp4Path)) {
+        const data = {
+          title: r.t,
+          description: r.e,
+          year: /^([0-9]+)/.exec(r.d)[1],
+        };
+        mp4Tasks.push({
+          path: mp4Path,
+          data,
+        });
+      }
     });
     ws.write(`</div></div>`);
     ws.write(`</div></body></html>`);
     ws.close();
+
+    for (const { path, data } of mp4Tasks) {
+      await new Promise((r) => {
+        console.log("---", path);
+        ffmetadata.write(path, data, (err) => {
+          if (err) console.error("Error writing metadata", err);
+          else console.log("Wrote metadata", data);
+          r();
+        });
+      });
+    }
   });

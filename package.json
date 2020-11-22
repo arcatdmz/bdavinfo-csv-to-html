@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "csv-parser": "^2.3.2",
+    "ffmetadata": "^1.6.0",
     "iconv-lite": "^0.5.1"
   },
   "devDependencies": {
