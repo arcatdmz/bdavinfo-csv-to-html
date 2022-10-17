@@ -2,7 +2,7 @@ import iconv from "iconv-lite";
 import csv from "csv-parser";
 import fs from "fs";
 import path from "path";
-import ffmetadata from "ffmetadata";
+import ffmetadata from "./ffmetadata";
 
 interface Mp4TaskIface {
   path: string;
